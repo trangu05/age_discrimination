@@ -1,0 +1,21 @@
+library(data.table)
+linkedin <- fread("/home/thn9/Documents/linkedin/profile_US.csv", select = 1)
+
+#Export into txt file
+write.table(linkedin, "/home/thn9/Documents/linkedin/user_id.txt", 
+            row.names = FALSE, col.names = FALSE, quote = FALSE)
+
+# Set chunk size based on previous calculation (adjust as needed)
+chunk_size <- 2500000  
+
+# Loop through the data in chunks and write each to a separate file
+for (i in seq(1, nrow(linkedin), by = chunk_size)) {
+  # Define the range of rows for this chunk
+  chunk <- linkedin[i:min(i + chunk_size - 1, nrow(linkedin)), ]
+  
+  # Create a filename for each chunk
+  file_name <- paste0("/home/thn9/Documents/linkedin/userid_chunk_", i, ".txt")
+  
+  # Write the chunk to a text file
+  write.table(chunk, file_name, row.names = FALSE, col.names = FALSE, quote = FALSE)
+}
